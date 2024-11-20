@@ -124,6 +124,7 @@ beq $s0, $t2, rotate_S_or_Z
 beq $s0, $t3, rotate_J_or_L
 beq $s0, $t4, rotate_J_or_L
 beq $s0, $t5, rotate_I
+# nop
 jr $ra			# otherwise end function
 # ----------------------------------------
 rotate_T:
@@ -202,7 +203,7 @@ ori $t1, $0, 1		# $t0 = 1
 beq $s5, $t3, J_or_L_pos_3
 beq $s5, $t2, J_or_L_pos_2
 beq $s5, $t1, J_or_L_pos_1
-
+#nop
 J_or_L_pos_0:
 addi $s2, $s2, -60	# calculate new px2
 addi $s3, $s3, 60	# calculate new px3
@@ -314,12 +315,12 @@ ori $t4, $0, 115    	# $t2 = 115 (ASCII value for 's')
 ori $t5, $0, 100    	# $t2 = 100 (ASCII value for 'd')
 ori $t6, $0, 113   	# $t2 = 113 (ASCII value for 'q')
 
-#j call_func_rotate
 beq $t1, $t2, call_func_rotate
 beq $t1, $t3, move_left
 beq $t1, $t4, move_down
 beq $t1, $t5, move_right
 beq $t1, $t6, quit
+# nop
 j cont			# if nothing pressed
 
 move_left:
@@ -335,15 +336,10 @@ j cont
 call_func_rotate:
 jal func_rotate_block
 ori $t0, $0, 64		# offset value for block drop
-# buffer
-ori $v0, $0, 32
-ori $a0, $0, 200
-syscall
 
 cont:
 ori $t1, $0, 0		# reset key value
 sw $t1, 0xFFFF0004
-
 # move down 1px
 sw $s7, 0($s1)		# fill in prev pixels with bg color
 sw $s7, 0($s2)
@@ -360,9 +356,9 @@ sw $s6, 0($s4)
 
 # buffer
 ori $v0, $0, 32
-ori $a0, $0, 200
+ori $a0, $0, 500
 syscall
 
 j game_loop
-
+#---------------------------------------------------------------------------------
 quit:
